@@ -2,7 +2,7 @@
    ⚠️ GANTI URL INI dengan Web App URL dari Apps Script lo,
    supaya tools ini otomatis connect begitu dibuka (auto-connect).
    ============================================================ */
-const SHEET_URL_DEFAULT = "PASTE_WEB_APP_URL_ANDA_DI_SINI"; // JANGAN commit URL asli ke repo public — isi lewat ikon gear di app, tersimpan otomatis di browser (localStorage).
+const SHEET_URL_DEFAULT = "https://script.google.com/macros/s/AKfycbxB4wn3g_ozELvEYjuVUUfotarxFCK2KYVE-7jUDrz3qvyi2zW4L15NpSQtrOh6WYK6/exec";
 
 let RAW = [];
 let SHEET_URL = "";
@@ -32,4 +32,3 @@ function activeSalesNames(){
   const names = USERS_CACHE.filter(u=>u.role==='sales').map(u=>u.nama);
   return names.length>0 ? names : ["MUHAMMAD ROIS","WITA MARLIANA","GIGIH JOKO ADHI PAMUNGKAS","FRENKY WINASIS","AHMAD IRWAN","YULIA SABATINI","MUHAMMAD ABDUL KARIM","ADITYA DWI CAHYONO","ALI MASKURI","DENI ABRORI MUSTAK"];
 }
-
