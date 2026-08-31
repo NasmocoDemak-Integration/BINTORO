@@ -1,0 +1,4 @@
+# Jangan pernah commit file yang berisi URL/kredensial asli
+backend-apps-script.gs
+*.local.js
+.env
