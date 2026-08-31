@@ -19,7 +19,7 @@ async function doLogin(){
       CURRENT_USER = { role: String(json.role||'sales').toLowerCase(), name: json.nama };
       if(document.getElementById('loginRemember').checked) localStorage.setItem('bintoro_username', username);
       else localStorage.removeItem('bintoro_username');
-      enterApp();
+      playLoadingScreen();
     }else{
       errEl.textContent = json.message || "Username atau password salah.";
       errEl.classList.add('show');
@@ -40,6 +40,25 @@ document.getElementById('switchUserBtn').addEventListener('click', ()=>{
   document.getElementById('loginOverlay').style.display = 'flex';
   document.getElementById('loginPassword').value = '';
 });
+function playLoadingScreen(){
+  document.getElementById('loginOverlay').style.display = 'none';
+  const screen = document.getElementById('loadingScreen');
+  const video = document.getElementById('loadingVideo');
+  screen.classList.add('show');
+  video.currentTime = 0;
+  video.play().catch(()=>{}); // fallback diam-diam kalau autoplay diblokir browser
+
+  let done = false;
+  const finish = ()=>{
+    if(done) return;
+    done = true;
+    screen.classList.remove('show');
+    enterApp();
+  };
+  video.onended = finish;
+  setTimeout(finish, 4500); // jaga-jaga kalau video gagal load/play, tetap lanjut masuk
+}
+
 function enterApp(){
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('app').classList.add('ready');
@@ -58,4 +77,3 @@ function enterApp(){
   populateFilterOptions();
   renderAll();
 }
-
