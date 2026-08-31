@@ -42,6 +42,12 @@
   .login-right img{position:relative;width:100%;height:100%;object-fit:contain;padding:32px;box-sizing:border-box;}
   @media (max-width:820px){ .login-right{display:none;} .login-shell{max-width:420px;} }
 
+  #loadingScreen{position:fixed;inset:0;background:#0A0A0C;z-index:150;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;}
+  #loadingScreen.show{display:flex;}
+  #loadingVideo{width:280px;height:280px;object-fit:contain;border-radius:16px;}
+  .loading-text{color:#9CA3AF;font-size:13px;letter-spacing:.03em;animation:loadingPulse 1.4s ease-in-out infinite;}
+  @keyframes loadingPulse{0%,100%{opacity:.5;}50%{opacity:1;}}
+
   /* login form (username/password) */
   .login-field-group{margin-bottom:16px;}
   .login-remember-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
