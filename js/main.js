@@ -8,7 +8,19 @@ function switchView(name){
   if(name==='revenue') renderRevenueView();
   if(name==='users') renderUsersView();
   if(name==='dashboard') renderDashboard();
+  closeMobileNav();
 }
+function openMobileNav(){
+  document.querySelector('.sidebar').classList.add('mobile-open');
+  document.getElementById('mobileNavBackdrop').classList.add('show');
+}
+function closeMobileNav(){
+  document.querySelector('.sidebar').classList.remove('mobile-open');
+  document.getElementById('mobileNavBackdrop').classList.remove('show');
+}
+document.getElementById('btnHamburger').addEventListener('click', openMobileNav);
+document.getElementById('mobileNavBackdrop').addEventListener('click', closeMobileNav);
+
 document.querySelectorAll('#dashCatToggle .pill').forEach(p=>{
   p.addEventListener('click', ()=>{
     document.querySelectorAll('#dashCatToggle .pill').forEach(x=>x.classList.remove('active'));
