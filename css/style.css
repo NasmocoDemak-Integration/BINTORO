@@ -229,8 +229,17 @@
 
   .empty-state{text-align:center;padding:50px 20px;color:var(--text-dim);font-size:13px;}
 
+  .btn-hamburger{display:none;width:36px;height:36px;border-radius:9px;background:var(--gray-soft);border:none;align-items:center;justify-content:center;cursor:pointer;flex:none;}
+  #mobileNavBackdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:59;}
+  #mobileNavBackdrop.show{display:block;}
+
   @media (max-width:1000px){
-    .sidebar{display:none;}
+    .btn-hamburger{display:flex;}
+    .sidebar{
+      position:fixed; left:-260px; top:0; height:100vh; z-index:60;
+      transition:left .25s ease; box-shadow:0 0 40px rgba(0,0,0,.4);
+    }
+    .sidebar.mobile-open{left:0;}
     .kpi-row{grid-template-columns:repeat(2,1fr);}
     .panel-grid{grid-template-columns:1fr;}
     .pu-grid{grid-template-columns:1fr;}
