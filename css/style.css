@@ -187,8 +187,31 @@
   .sales-card-avatar{width:42px;height:42px;border-radius:50%;background:var(--black);color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;}
   .sales-card-name{font-weight:700;font-size:13.5px;}
   .sales-card-sub{font-size:11px;color:var(--text-muted);margin-top:1px;}
-  .sales-card-stats{display:flex;gap:14px;font-size:11.5px;}
-  .sales-card-stats b{display:block;font-size:15px;font-weight:800;}
+  .sales-card-status-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px 10px;padding-top:12px;border-top:1px solid var(--border);}
+  .scs-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted);}
+  .scs-item b{color:var(--text);font-size:12.5px;font-weight:800;min-width:16px;}
+  .scs-dot{width:8px;height:8px;border-radius:50%;flex:none;}
+  .scs-dot.st-belum{background:var(--gray-text);}
+  .scs-dot.st-sudah{background:var(--blue);}
+  .scs-dot.st-prospek{background:var(--cyan);}
+  .scs-dot.st-hotprospek{background:var(--amber);}
+  .scs-dot.st-deal{background:var(--green);}
+  .scs-dot.st-tidak{background:var(--red);}
+
+  .status-card-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px;}
+  .status-mini-card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:11px;padding:12px 10px;text-align:center;cursor:pointer;}
+  .status-mini-card:hover{border-color:var(--text-dim);}
+  .status-mini-card.active{border-color:currentColor;box-shadow:0 0 0 1px currentColor;}
+  .smc-count{font-size:20px;font-weight:800;}
+  .smc-label{font-size:10px;color:var(--text-muted);margin-top:3px;line-height:1.3;}
+  .status-mini-card.st-belum{color:var(--gray-text);}
+  .status-mini-card.st-sudah{color:var(--blue);}
+  .status-mini-card.st-prospek{color:var(--cyan);}
+  .status-mini-card.st-hotprospek{color:var(--amber);}
+  .status-mini-card.st-deal{color:var(--green);}
+  .status-mini-card.st-tidak{color:var(--red);}
+  .status-mini-card .smc-count{color:var(--text);}
+  .status-mini-card.active .smc-count{color:currentColor;}
 
   .pu-select-row{margin-bottom:18px;display:flex;gap:10px;flex-wrap:wrap;}
   .pu-select-row select{background:var(--card-bg);border:1px solid var(--border);border-radius:9px;padding:10px 14px;font-size:13px;font-family:'Inter';}
@@ -244,4 +267,6 @@
     .panel-grid{grid-template-columns:1fr;}
     .pu-grid{grid-template-columns:1fr;}
     .data-table{font-size:11.5px;}
+    .status-card-row{grid-template-columns:repeat(3,1fr);}
+    .pu-grid-cards{grid-template-columns:1fr;}
   }
