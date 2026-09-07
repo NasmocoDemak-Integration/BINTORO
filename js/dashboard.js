@@ -30,6 +30,7 @@ function renderDashboard(){
   if(rows.length===0){
     ['kpiTotal','kpiHot','kpiRevPotensi','kpiRevRealized'].forEach(id=>document.getElementById(id).textContent="–");
     document.getElementById('catBars').innerHTML = '<div class="empty-state" style="width:100%;">Belum ada data — sambungkan Google Sheets (ikon gear), atau coba kategori lain.</div>';
+    document.getElementById('statusBars').innerHTML = '';
     document.getElementById('recentUpdates').innerHTML = '';
     document.getElementById('bellDot').style.display='none';
     renderPerSalesPanel();
@@ -38,6 +39,7 @@ function renderDashboard(){
   document.getElementById('kpiTotal').textContent = rows.length.toLocaleString('id-ID');
   let hotCount=0, revPotensi=0, revRealized=0;
   const catCounts = {TR:0, FR:0, NT:0};
+  const statusCounts = {}; STATUS_OPTIONS.forEach(s=>statusCounts[s]=0);
   rows.forEach(r=>{
     const age = ageYears(r.date);
     const st = statusFromAge(age);
@@ -45,6 +47,7 @@ function renderDashboard(){
     revPotensi += (r.revenue_estimator||0);
     const assign = getAssignment(r.id);
     if(assign.status==='Deal') revRealized += (r.revenue_estimator||0);
+    if(statusCounts[assign.status]!==undefined) statusCounts[assign.status]++;
     const b = bucketOf(r);
     if(b) catCounts[b]++;
   });
@@ -59,6 +62,15 @@ function renderDashboard(){
       <div class="bar-val">${v}</div>
       <div class="bar" style="height:${(v/maxCat*110)}px;background:${CAT_COLOR[k]};"></div>
       <div class="bar-name">${CAT_LABEL[k]}</div>
+    </div>`).join('');
+
+  const STATUS_COLOR = {"Belum Dihubungi":"var(--gray-text)","Sudah Dihubungi":"var(--blue)","Prospek":"var(--cyan)","Hot Prospek":"var(--amber)","Deal":"var(--green)","Tidak Tertarik":"var(--red)"};
+  const maxStatus = Math.max(1, ...Object.values(statusCounts));
+  document.getElementById('statusBars').innerHTML = STATUS_OPTIONS.map(s=>`
+    <div class="bar-col">
+      <div class="bar-val">${statusCounts[s]}</div>
+      <div class="bar" style="height:${(statusCounts[s]/maxStatus*110)}px;background:${STATUS_COLOR[s]};"></div>
+      <div class="bar-name">${s}</div>
     </div>`).join('');
 
   const nameById = {}; RAW.forEach(r=>nameById[r.id]=r.name);
@@ -79,4 +91,3 @@ function renderDashboard(){
     }).join('');
   renderPerSalesPanel();
 }
-
