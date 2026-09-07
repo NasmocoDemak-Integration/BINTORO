@@ -1,4 +1,6 @@
 /* ================= Progress Updates ================= */
+let puStatusFilter = null;
+
 function updateBreadcrumb(){
   const bc = document.getElementById('puBreadcrumb');
   if(puView==='detail'){
@@ -23,21 +25,22 @@ function renderSalesGrid(){
   document.getElementById('puContent').style.display = 'none';
 
   wrap.innerHTML = activeSalesNames().map(s=>{
-    const n = RAW.filter(r=>getAssignment(r.id).sales===s).length;
-    const deal = RAW.filter(r=>getAssignment(r.id).sales===s && getAssignment(r.id).status==='Deal').length;
+    const myRows = RAW.filter(r=>getAssignment(r.id).sales===s);
+    const n = myRows.length;
+    const statusCounts = {}; STATUS_OPTIONS.forEach(st=>statusCounts[st]=0);
+    myRows.forEach(r=>{ const st = getAssignment(r.id).status; if(statusCounts[st]!==undefined) statusCounts[st]++; });
     return `<div class="sales-card" data-sales="${s}">
       <div class="sales-card-top">
         <div class="sales-card-avatar">${initials(s)}</div>
-        <div><div class="sales-card-name">${s}</div><div class="sales-card-sub">Sales Aktif</div></div>
+        <div><div class="sales-card-name">${s}</div><div class="sales-card-sub">Sales Aktif · ${n} Target</div></div>
       </div>
-      <div class="sales-card-stats">
-        <div><b>${n}</b>Target</div>
-        <div><b>${deal}</b>Deal</div>
+      <div class="sales-card-status-grid">
+        ${STATUS_OPTIONS.map(st=>`<div class="scs-item"><span class="scs-dot ${STATUS_META[st].cls}"></span><b>${statusCounts[st]}</b> ${st}</div>`).join('')}
       </div>
     </div>`;
   }).join('');
   wrap.querySelectorAll('.sales-card').forEach(c=>{
-    c.addEventListener('click', ()=>{ selectedSalesForProgress = c.dataset.sales; puView='list'; renderProgressUpdatesView(); });
+    c.addEventListener('click', ()=>{ selectedSalesForProgress = c.dataset.sales; puStatusFilter=null; puView='list'; renderProgressUpdatesView(); });
   });
 }
 
@@ -48,8 +51,30 @@ function renderTargetListForSales(){
   document.getElementById('puTargetListWrap').style.display = 'block';
   document.getElementById('puContent').style.display = 'none';
 
+  const allRows = RAW.filter(r=>getAssignment(r.id).sales===selectedSalesForProgress).map(r=>({...r,_bucket:bucketOf(r)})).filter(r=>r._bucket);
+
+  const statusCounts = {}; STATUS_OPTIONS.forEach(s=>statusCounts[s]=0);
+  allRows.forEach(r=>{ const st = getAssignment(r.id).status; if(statusCounts[st]!==undefined) statusCounts[st]++; });
+  const statusCardsWrap = document.getElementById('puStatusCards');
+  statusCardsWrap.innerHTML = STATUS_OPTIONS.map(s=>{
+    const meta = STATUS_META[s];
+    const isActive = puStatusFilter===s ? 'active' : '';
+    return `<div class="status-mini-card ${meta.cls} ${isActive}" data-status="${s}">
+      <div class="smc-count">${statusCounts[s]}</div>
+      <div class="smc-label">${s}</div>
+    </div>`;
+  }).join('');
+  statusCardsWrap.querySelectorAll('.status-mini-card').forEach(c=>{
+    c.addEventListener('click', ()=>{
+      const st = c.dataset.status;
+      puStatusFilter = (puStatusFilter===st) ? null : st;
+      renderTargetListForSales();
+    });
+  });
+
   const search = (document.getElementById('puListSearch').value||'').toLowerCase();
-  let rows = RAW.filter(r=>getAssignment(r.id).sales===selectedSalesForProgress).map(r=>({...r,_bucket:bucketOf(r)})).filter(r=>r._bucket);
+  let rows = allRows;
+  if(puStatusFilter) rows = rows.filter(r=>getAssignment(r.id).status===puStatusFilter);
   if(search) rows = rows.filter(r=>(r.name||'').toLowerCase().includes(search) || (r.vin||'').toLowerCase().includes(search));
   rows.sort((a,b)=> ageYears(b.date)-ageYears(a.date));
 
@@ -202,4 +227,3 @@ function renderProgressUpdatesView(){
   else if(puView==='list') renderTargetListForSales();
   else renderProgressContent();
 }
-
