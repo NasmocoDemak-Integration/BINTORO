@@ -270,3 +270,35 @@
     .status-card-row{grid-template-columns:repeat(3,1fr);}
     .pu-grid-cards{grid-template-columns:1fr;}
   }
+  .export-step{margin-bottom:22px;}
+  .export-step h4{font-size:13px;font-weight:700;margin-bottom:10px;}
+  .export-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .export-card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;text-align:center;}
+  .export-card:hover{border-color:var(--text-dim);}
+  .export-card.active{border-color:var(--red);background:var(--red-soft);}
+  .export-card .ec-icon{font-size:20px;margin-bottom:6px;}
+  .export-card .ec-title{font-weight:700;font-size:13px;}
+  .export-card .ec-sub{font-size:10.5px;color:var(--text-muted);margin-top:3px;}
+
+  .export-info-banner{background:var(--blue-soft);color:var(--blue);border-radius:9px;padding:10px 14px;font-size:12px;margin-bottom:22px;}
+
+  .export-column-box{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:14px;max-height:340px;overflow-y:auto;}
+  .export-column-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;}
+  .export-column-head button{background:none;border:none;color:var(--red);font-weight:700;cursor:pointer;font-size:11.5px;}
+  .export-col-group-title{font-size:10.5px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.04em;margin:14px 0 7px;}
+  .export-col-group-title:first-child{margin-top:0;}
+  .export-col-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .export-col-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;cursor:pointer;}
+  .export-col-item.checked{background:var(--green-soft);border-color:var(--green);}
+  .export-col-item input{pointer-events:none;}
+
+  .export-count-note{font-size:11px;color:var(--text-muted);margin-top:8px;}
+  .export-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:6px;}
+
+  @media (max-width:1000px){
+    .export-cards{grid-template-columns:1fr;}
+    .export-col-grid{grid-template-columns:1fr;}
+  }
+
+  #exportDataCards{grid-template-columns:repeat(4,1fr);}
+  @media (max-width:1000px){ #exportDataCards{grid-template-columns:repeat(2,1fr);} }
