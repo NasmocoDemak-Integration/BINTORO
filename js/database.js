@@ -5,11 +5,13 @@ function getFilteredSorted(){
   const kec = document.getElementById('kecFilter').value;
   const ageF = document.getElementById('ageFilter').value;
   const salesF = document.getElementById('salesFilterDb').value;
+  const statusF = document.getElementById('statusFollowupFilter').value;
 
   rows = rows.map(r=>({...r, _age: ageYears(r.date), _bucket: bucketOf(r)})).filter(r=>r._bucket);
   if(currentCatFilter && currentCatFilter!=='LHC') rows = rows.filter(r=>r._bucket===currentCatFilter);
   if(kec) rows = rows.filter(r=>r.kecamatan_norm===kec);
   if(ageF) rows = rows.filter(r=>statusFromAge(r._age).cls===ageF);
+  if(statusF) rows = rows.filter(r=>getAssignment(r.id).status===statusF);
   if(salesF){
     if(salesF==='__unassigned') rows = rows.filter(r=>!getAssignment(r.id).sales);
     else rows = rows.filter(r=>getAssignment(r.id).sales===salesF);
@@ -182,4 +184,3 @@ function goToTargetDetail(id){
   puView = 'detail';
   switchView('progress');
 }
-
