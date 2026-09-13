@@ -99,6 +99,10 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
       User Management
     </div>
+    <div class="nav-item" data-view="export" style="display:none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+      Export Data
+    </div>
 
     <div class="sidebar-bottom">
       <div class="sidebar-user">
@@ -216,11 +220,20 @@
           <input type="text" class="search-input-inline" id="dbSearch" placeholder="Cari nama customer atau VIN...">
           <select class="sel-inline" id="kecFilter"><option value="">Semua Kecamatan</option></select>
           <select class="sel-inline" id="ageFilter">
-            <option value="">Semua Status</option>
+            <option value="">Semua Status Umur</option>
             <option value="keep">Keep</option>
             <option value="cold">Cold</option>
             <option value="warm">Warm</option>
             <option value="hot">Hot</option>
+          </select>
+          <select class="sel-inline" id="statusFollowupFilter">
+            <option value="">Semua Status Follow-up</option>
+            <option value="Belum Dihubungi">Belum Dihubungi</option>
+            <option value="Sudah Dihubungi">Sudah Dihubungi</option>
+            <option value="Prospek">Prospek</option>
+            <option value="Hot Prospek">Hot Prospek</option>
+            <option value="Deal">Deal</option>
+            <option value="Tidak Tertarik">Tidak Tertarik</option>
           </select>
           <select class="sel-inline" id="salesFilterDb"><option value="">Semua Sales</option></select>
           <select class="sel-inline" id="sortSelect">
@@ -345,10 +358,91 @@
         </table>
       </div>
 
+      <!-- ============ EXPORT DATA (Manager only) ============ -->
+      <div class="view" id="view-export">
+        <div class="page-title">Export Data</div>
+        <div class="page-sub">Unduh data untuk laporan atau analisis eksternal.</div>
+
+        <div class="export-step">
+          <h4>1. Pilih Data</h4>
+          <div class="export-cards" id="exportDataCards">
+            <div class="export-card active" data-type="detail">
+              <div class="ec-icon">🔍</div>
+              <div class="ec-title">Filtered Detail</div>
+              <div class="ec-sub">Sesuai filter Target Database saat ini</div>
+            </div>
+            <div class="export-card" data-type="sales">
+              <div class="ec-icon">📊</div>
+              <div class="ec-title">Summary per Sales</div>
+              <div class="ec-sub">Ringkasan performa tiap sales</div>
+            </div>
+            <div class="export-card" data-type="kategori">
+              <div class="ec-icon">📁</div>
+              <div class="ec-title">Summary per Kategori</div>
+              <div class="ec-sub">Ringkasan per kategori target</div>
+            </div>
+            <div class="export-card" data-type="log">
+              <div class="ec-icon">📝</div>
+              <div class="ec-title">Riwayat Follow-up</div>
+              <div class="ec-sub">Semua histori kontak &amp; catatan</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="export-info-banner" id="exportInfoBanner"></div>
+
+        <div class="export-step" id="exportColumnStep">
+          <h4>2. Template Kolom</h4>
+          <div class="export-cards" id="exportTemplateCards">
+            <div class="export-card" data-template="internal">
+              <div class="ec-title">Internal</div>
+              <div class="ec-sub">Semua kolom termasuk kontak</div>
+            </div>
+            <div class="export-card" data-template="eksternal">
+              <div class="ec-title">Eksternal</div>
+              <div class="ec-sub">Tanpa data kontak & internal</div>
+            </div>
+            <div class="export-card active" data-template="custom">
+              <div class="ec-title">Custom</div>
+              <div class="ec-sub">Pilih manual</div>
+            </div>
+          </div>
+
+          <div class="export-column-box">
+            <div class="export-column-head">
+              <span>Pilih kolom yang diekspor</span>
+              <button id="btnSelectAllCols">Pilih Semua</button>
+            </div>
+            <div id="exportColumnList"></div>
+          </div>
+          <div class="export-count-note" id="exportColCount"></div>
+        </div>
+
+        <div class="export-step">
+          <h4>3. Format File</h4>
+          <div class="export-cards" id="exportFormatCards">
+            <div class="export-card active" data-format="xlsx">
+              <div class="ec-title">Excel (.xlsx)</div>
+              <div class="ec-sub">Bisa diolah lebih lanjut</div>
+            </div>
+            <div class="export-card" data-format="pdf">
+              <div class="ec-title">PDF</div>
+              <div class="ec-sub">Siap print / share</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="export-actions">
+          <button class="btn-secondary" id="btnExportCancel">Batal</button>
+          <button class="btn-primary" id="btnExportGo">Export</button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="js/state.js"></script>
 <script src="js/utils.js"></script>
 <script src="js/auth.js"></script>
@@ -358,6 +452,7 @@
 <script src="js/progress.js"></script>
 <script src="js/revenue.js"></script>
 <script src="js/users.js"></script>
+<script src="js/export.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
