@@ -7,6 +7,7 @@ function switchView(name){
   if(name==='progress') renderProgressUpdatesView();
   if(name==='revenue') renderRevenueView();
   if(name==='users') renderUsersView();
+  if(name==='export') renderExportView();
   if(name==='dashboard') renderDashboard();
   closeMobileNav();
 }
@@ -57,6 +58,7 @@ document.getElementById('btnRefresh').addEventListener('click', async ()=>{
 document.getElementById('dbSearch').addEventListener('input', ()=>{ currentPage=1; renderDatabaseView(); });
 document.getElementById('kecFilter').addEventListener('change', ()=>{ currentPage=1; renderDatabaseView(); });
 document.getElementById('ageFilter').addEventListener('change', ()=>{ currentPage=1; renderDatabaseView(); });
+document.getElementById('statusFollowupFilter').addEventListener('change', ()=>{ currentPage=1; renderDatabaseView(); });
 document.getElementById('salesFilterDb').addEventListener('change', ()=>{ currentPage=1; renderDatabaseView(); });
 document.getElementById('sortSelect').addEventListener('change', (e)=>{ currentSort=e.target.value; renderDatabaseView(); });
 document.querySelectorAll('#catFilterGroup .pill').forEach(p=>{
