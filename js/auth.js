@@ -72,6 +72,7 @@ function enterApp(){
   document.getElementById('puSub').textContent = isManager ? 'Pilih target untuk melihat & mencatat riwayat follow-up.' : 'Target Anda — catat progress follow-up di sini.';
   document.getElementById('revSub').textContent = isManager ? 'Potensi & realized revenue dari seluruh target.' : 'Potensi & realized revenue dari target Anda.';
   document.querySelectorAll('.nav-item[data-view="users"]').forEach(el=> el.style.display = isManager ? '' : 'none');
+  document.querySelectorAll('.nav-item[data-view="export"]').forEach(el=> el.style.display = isManager ? '' : 'none');
   if(isManager){ puView='grid'; selectedSalesForProgress=null; }
   else{ puView='list'; selectedSalesForProgress=CURRENT_USER.name; }
   populateFilterOptions();
