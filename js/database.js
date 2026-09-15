@@ -116,7 +116,13 @@ function renderDatabaseView(){
   tbody.querySelectorAll('.sales-select').forEach(sel=>{
     sel.addEventListener('click', e=>e.stopPropagation());
     sel.addEventListener('change', async (e)=>{
-      await setAssignment(e.target.dataset.id, 'sales', e.target.value);
+      const targetId = e.target.dataset.id;
+      const newSales = e.target.value;
+      await setAssignment(targetId, 'sales', newSales);
+      if(newSales){
+        const currentStatus = getAssignment(targetId).status;
+        await submitLog(targetId, CURRENT_USER.name, currentStatus, `Di-assign ke ${newSales} oleh ${CURRENT_USER.name} (${CURRENT_USER.role==='manager'?'Manager':'Sales'})`, null);
+      }
       renderDatabaseView(); renderDashboard();
     });
   });
