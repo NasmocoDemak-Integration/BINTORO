@@ -163,6 +163,17 @@ function renderProgressContent(){
           <h3>Log Update Baru</h3>
           <label>Update Status</label>
           <select id="logStatusSelect">${STATUS_OPTIONS.map(s=>`<option value="${s}" ${assign.status===s?'selected':''}>${s}</option>`).join('')}</select>
+
+          <div id="detailSudahDihubungiWrap" style="display:none;">
+            <label>Detail Sudah Dihubungi</label>
+            <select id="detailSudahDihubungi">
+              <option value="">— Pilih Detail —</option>
+              <option value="Retensi-Service">Retensi-Service</option>
+              <option value="Retensi & Referensi">Retensi &amp; Referensi</option>
+              <option value="Suspect">Suspect</option>
+            </select>
+          </div>
+
           <label>Catatan</label>
           <textarea id="logNotes" placeholder="Tulis catatan hasil follow-up..."></textarea>
           <label>Dokumentasi (opsional)</label>
@@ -200,14 +211,24 @@ function renderProgressContent(){
       </div>
     </div>`;
 
+  document.getElementById('logStatusSelect').addEventListener('change', (e)=>{
+    document.getElementById('detailSudahDihubungiWrap').style.display = (e.target.value==='Sudah Dihubungi') ? 'block' : 'none';
+  });
+  document.getElementById('detailSudahDihubungiWrap').style.display = (document.getElementById('logStatusSelect').value==='Sudah Dihubungi') ? 'block' : 'none';
+
   document.getElementById('btnSubmitLog').addEventListener('click', async ()=>{
     const status = document.getElementById('logStatusSelect').value;
-    const notes = document.getElementById('logNotes').value.trim();
+    let notes = document.getElementById('logNotes').value.trim();
     const file = document.getElementById('logFile').files[0];
     const sales = assign.sales || (CURRENT_USER.role==='sales' ? CURRENT_USER.name : 'Manager');
     const newHp1 = document.getElementById('editHp1').value.trim();
     const newHp2 = document.getElementById('editHp2').value.trim();
     const newHp3 = document.getElementById('editHp3').value.trim();
+
+    if(status==='Sudah Dihubungi'){
+      const detail = document.getElementById('detailSudahDihubungi').value;
+      if(detail) notes = notes ? `[${detail}] ${notes}` : `[${detail}]`;
+    }
 
     await setAssignment(target.id, 'status', status);
     await submitLog(target.id, sales, status, notes, file);
