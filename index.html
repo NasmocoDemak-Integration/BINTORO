@@ -240,6 +240,7 @@
             <option value="age_desc">Sort: Umur (Tertua)</option>
             <option value="age_asc">Sort: Umur (Termuda)</option>
             <option value="revenue_desc">Sort: Revenue (Terbesar)</option>
+            <option value="priority_desc">Sort: Prioritas (Umur + Revenue)</option>
             <option value="name_asc">Sort: Nama (A-Z)</option>
           </select>
           <select class="sel-inline" id="pageSizeSelect">
@@ -279,6 +280,27 @@
           <div id="puStatusCards" class="status-card-row"></div>
           <div class="toolbar">
             <input type="text" class="search-input-inline" id="puListSearch" placeholder="Cari target...">
+            <select class="sel-inline" id="puKecFilter"><option value="">Semua Kecamatan</option></select>
+            <select class="sel-inline" id="puKatFilter">
+              <option value="">Semua Kategori</option>
+              <option value="TR">Target Replacement</option>
+              <option value="FR">Fleet/GSO Replacement</option>
+              <option value="NT">Next Target</option>
+            </select>
+            <select class="sel-inline" id="puAgeFilter">
+              <option value="">Semua Status Umur</option>
+              <option value="keep">Keep</option>
+              <option value="cold">Cold</option>
+              <option value="warm">Warm</option>
+              <option value="hot">Hot</option>
+            </select>
+            <select class="sel-inline" id="puSortFilter">
+              <option value="age_desc">Sort: Umur (Tertua)</option>
+              <option value="age_asc">Sort: Umur (Termuda)</option>
+              <option value="revenue_desc">Sort: Revenue (Terbesar)</option>
+              <option value="priority_desc">Sort: Prioritas (Umur + Revenue)</option>
+              <option value="name_asc">Sort: Nama (A-Z)</option>
+            </select>
           </div>
           <table class="data-table">
             <thead><tr><th>Target</th><th>Kategori</th><th>Umur</th><th>Status</th></tr></thead>
