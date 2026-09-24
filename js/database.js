@@ -1,4 +1,18 @@
 /* ================= Target Database ================= */
+function computePriorityScores(rows){
+  const ages = rows.map(r=>r._age||0);
+  const revs = rows.map(r=>r.revenue_estimator||0);
+  const rankOf = (arr)=>{
+    const idx = arr.map((v,i)=>i).sort((a,b)=>arr[a]-arr[b]);
+    const ranks = new Array(arr.length);
+    idx.forEach((origIdx,rank)=>{ ranks[origIdx] = arr.length>1 ? rank/(arr.length-1) : 1; });
+    return ranks;
+  };
+  const ageRanks = rankOf(ages);
+  const revRanks = rankOf(revs);
+  return rows.map((r,i)=> (ageRanks[i]+revRanks[i])/2 );
+}
+
 function getFilteredSorted(){
   let rows = scopedRows();
   const search = document.getElementById('dbSearch').value.toLowerCase();
@@ -22,6 +36,11 @@ function getFilteredSorted(){
   if(currentSort==="age_asc") rows.sort((a,b)=>(a._age||0)-(b._age||0));
   if(currentSort==="revenue_desc") rows.sort((a,b)=>(b.revenue_estimator||0)-(a.revenue_estimator||0));
   if(currentSort==="name_asc") rows.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+  if(currentSort==="priority_desc"){
+    const scores = computePriorityScores(rows);
+    rows = rows.map((r,i)=>({...r, _priorityScore: scores[i]}));
+    rows.sort((a,b)=> b._priorityScore - a._priorityScore);
+  }
   return rows;
 }
 
