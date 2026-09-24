@@ -1,5 +1,9 @@
 /* ================= Progress Updates ================= */
 let puStatusFilter = null;
+let puKecFilter = '';
+let puKatFilter = '';
+let puAgeFilter = '';
+let puSortFilter = 'age_desc';
 
 function updateBreadcrumb(){
   const bc = document.getElementById('puBreadcrumb');
@@ -40,7 +44,11 @@ function renderSalesGrid(){
     </div>`;
   }).join('');
   wrap.querySelectorAll('.sales-card').forEach(c=>{
-    c.addEventListener('click', ()=>{ selectedSalesForProgress = c.dataset.sales; puStatusFilter=null; puView='list'; renderProgressUpdatesView(); });
+    c.addEventListener('click', ()=>{
+      selectedSalesForProgress = c.dataset.sales;
+      puStatusFilter=null; puKecFilter=''; puKatFilter=''; puAgeFilter=''; puSortFilter='age_desc';
+      puView='list'; renderProgressUpdatesView();
+    });
   });
 }
 
@@ -73,10 +81,38 @@ function renderTargetListForSales(){
   });
 
   const search = (document.getElementById('puListSearch').value||'').toLowerCase();
-  let rows = allRows;
+
+  // populate opsi kecamatan dinamis dari target sales ini
+  const kecSel = document.getElementById('puKecFilter');
+  const kecOptions = [...new Set(allRows.map(r=>r.kecamatan_norm).filter(Boolean))].sort();
+  const kecCurrentVal = puKecFilter;
+  kecSel.innerHTML = '<option value="">Semua Kecamatan</option>' + kecOptions.map(k=>`<option value="${k}" ${k===kecCurrentVal?'selected':''}>${k}</option>`).join('');
+
+  document.getElementById('puKatFilter').value = puKatFilter;
+  document.getElementById('puAgeFilter').value = puAgeFilter;
+  document.getElementById('puSortFilter').value = puSortFilter;
+
+  let rows = allRows.map(r=>({...r, _age: ageYears(r.date)}));
   if(puStatusFilter) rows = rows.filter(r=>getAssignment(r.id).status===puStatusFilter);
+  if(puKecFilter) rows = rows.filter(r=>r.kecamatan_norm===puKecFilter);
+  if(puKatFilter) rows = rows.filter(r=>r._bucket===puKatFilter);
+  if(puAgeFilter) rows = rows.filter(r=>statusFromAge(r._age).cls===puAgeFilter);
   if(search) rows = rows.filter(r=>(r.name||'').toLowerCase().includes(search) || (r.vin||'').toLowerCase().includes(search));
-  rows.sort((a,b)=> ageYears(b.date)-ageYears(a.date));
+
+  if(puSortFilter==='age_desc') rows.sort((a,b)=>(b._age||0)-(a._age||0));
+  if(puSortFilter==='age_asc') rows.sort((a,b)=>(a._age||0)-(b._age||0));
+  if(puSortFilter==='revenue_desc') rows.sort((a,b)=>(b.revenue_estimator||0)-(a.revenue_estimator||0));
+  if(puSortFilter==='name_asc') rows.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+  if(puSortFilter==='priority_desc'){
+    const scores = computePriorityScores(rows);
+    rows = rows.map((r,i)=>({...r, _priorityScore: scores[i]}));
+    rows.sort((a,b)=> b._priorityScore - a._priorityScore);
+  }
+
+  document.getElementById('puKecFilter').onchange = (e)=>{ puKecFilter=e.target.value; renderTargetListForSales(); };
+  document.getElementById('puKatFilter').onchange = (e)=>{ puKatFilter=e.target.value; renderTargetListForSales(); };
+  document.getElementById('puAgeFilter').onchange = (e)=>{ puAgeFilter=e.target.value; renderTargetListForSales(); };
+  document.getElementById('puSortFilter').onchange = (e)=>{ puSortFilter=e.target.value; renderTargetListForSales(); };
 
   const tbody = document.getElementById('puListTableBody');
   tbody.innerHTML = rows.length===0 ? `<tr><td colspan="4"><div class="empty-state">Belum ada target untuk sales ini.</div></td></tr>` :
