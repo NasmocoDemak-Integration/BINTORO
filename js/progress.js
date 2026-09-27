@@ -97,7 +97,7 @@ function renderTargetListForSales(){
   if(puKecFilter) rows = rows.filter(r=>r.kecamatan_norm===puKecFilter);
   if(puKatFilter) rows = rows.filter(r=>r._bucket===puKatFilter);
   if(puAgeFilter) rows = rows.filter(r=>statusFromAge(r._age).cls===puAgeFilter);
-  if(search) rows = rows.filter(r=>(r.name||'').toLowerCase().includes(search) || (r.vin||'').toLowerCase().includes(search));
+  if(search) rows = rows.filter(r=>(r.name||'').toLowerCase().includes(search) || (r.vin||'').toLowerCase().includes(search) || (r.type||'').toLowerCase().includes(search));
 
   if(puSortFilter==='age_desc') rows.sort((a,b)=>(b._age||0)-(a._age||0));
   if(puSortFilter==='age_asc') rows.sort((a,b)=>(a._age||0)-(b._age||0));
