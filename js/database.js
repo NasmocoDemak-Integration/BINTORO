@@ -30,7 +30,7 @@ function getFilteredSorted(){
     if(salesF==='__unassigned') rows = rows.filter(r=>!getAssignment(r.id).sales);
     else rows = rows.filter(r=>getAssignment(r.id).sales===salesF);
   }
-  if(search) rows = rows.filter(r=> (r.name||'').toLowerCase().includes(search) || (r.vin||'').toLowerCase().includes(search));
+  if(search) rows = rows.filter(r=> (r.name||'').toLowerCase().includes(search) || (r.vin||'').toLowerCase().includes(search) || (r.type||'').toLowerCase().includes(search));
 
   if(currentSort==="age_desc") rows.sort((a,b)=>(b._age||0)-(a._age||0));
   if(currentSort==="age_asc") rows.sort((a,b)=>(a._age||0)-(b._age||0));
@@ -155,7 +155,7 @@ function renderLHCView(){
 
   const search = document.getElementById('dbSearch').value.toLowerCase();
   let rows = scopedRows().filter(r=>r.name && r.kecamatan_norm);
-  if(search) rows = rows.filter(r=> (r.name||'').toLowerCase().includes(search));
+  if(search) rows = rows.filter(r=> (r.name||'').toLowerCase().includes(search) || (r.type||'').toLowerCase().includes(search));
 
   const groups = {};
   rows.forEach(r=>{
