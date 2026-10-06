@@ -8,6 +8,7 @@ async function loadFromSheets(){
     ASSIGN_CACHE = json.assignments || {};
     LOG_CACHE = (json.logs || []).map(l => ({...l, targetId:String(l.targetId)}));
     USERS_CACHE = (json.users || []).map(u => ({...u, nik:String(u.nik)}));
+    VALIDATION_LOG_CACHE = (json.validationLogs || []).map(v => ({...v, targetId:String(v.targetId)}));
     return true;
   }catch(err){ console.error("Gagal ambil data:", err); return false; }
 }
