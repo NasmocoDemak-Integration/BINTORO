@@ -28,6 +28,7 @@ const STATUS_META = {
 };
 const STATUS_OPTIONS = Object.keys(STATUS_META);
 let USERS_CACHE = []; // {nik, nama, username, no_hp, role}
+let VALIDATION_LOG_CACHE = []; // riwayat flag/validasi nomor dari tab ValidationLog
 function activeSalesNames(){
   const names = USERS_CACHE.filter(u=>u.role==='sales').map(u=>u.nama);
   return names.length>0 ? names : ["MUHAMMAD ROIS","WITA MARLIANA","GIGIH JOKO ADHI PAMUNGKAS","FRENKY WINASIS","AHMAD IRWAN","YULIA SABATINI","MUHAMMAD ABDUL KARIM","ADITYA DWI CAHYONO","ALI MASKURI","DENI ABRORI MUSTAK"];
