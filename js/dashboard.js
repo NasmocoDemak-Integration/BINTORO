@@ -25,6 +25,40 @@ function renderPerSalesPanel(){
   }).join('');
 }
 
+function renderRealProgressPanel(){
+  const REAL_PROGRESS_STATUSES = ['Prospek','Hot Prospek','Deal'];
+  const rows = scopedRows().filter(r=> REAL_PROGRESS_STATUSES.includes(getAssignment(r.id).status));
+
+  if(rows.length===0){
+    ['rpCount','rpRevPotensi','rpRevRealized','rpConv'].forEach(id=>document.getElementById(id).textContent="–");
+    document.getElementById('rpBars').innerHTML = '<div class="empty-state" style="width:100%;">Belum ada target dengan status Prospek ke atas.</div>';
+    return;
+  }
+
+  let revPotensi=0, revRealized=0, dealCount=0;
+  const statusCounts = {Prospek:0, 'Hot Prospek':0, Deal:0};
+  rows.forEach(r=>{
+    revPotensi += (r.revenue_estimator||0);
+    const status = getAssignment(r.id).status;
+    statusCounts[status]++;
+    if(status==='Deal'){ revRealized += (r.revenue_estimator||0); dealCount++; }
+  });
+
+  document.getElementById('rpCount').textContent = rows.length.toLocaleString('id-ID');
+  document.getElementById('rpRevPotensi').textContent = formatRupiah(revPotensi);
+  document.getElementById('rpRevRealized').textContent = formatRupiah(revRealized);
+  document.getElementById('rpConv').textContent = (dealCount/rows.length*100).toFixed(1) + '%';
+
+  const RP_COLOR = {'Prospek':'var(--cyan)', 'Hot Prospek':'var(--amber)', 'Deal':'var(--green)'};
+  const maxRp = Math.max(1, ...Object.values(statusCounts));
+  document.getElementById('rpBars').innerHTML = REAL_PROGRESS_STATUSES.map(s=>`
+    <div class="bar-col">
+      <div class="bar-val">${statusCounts[s]}</div>
+      <div class="bar" style="height:${(statusCounts[s]/maxRp*110)}px;background:${RP_COLOR[s]};"></div>
+      <div class="bar-name">${s}</div>
+    </div>`).join('');
+}
+
 function renderDashboard(){
   const rows = scopedRows();
   if(rows.length===0){
@@ -34,6 +68,7 @@ function renderDashboard(){
     document.getElementById('recentUpdates').innerHTML = '';
     document.getElementById('bellDot').style.display='none';
     renderPerSalesPanel();
+    renderRealProgressPanel();
     return;
   }
   document.getElementById('kpiTotal').textContent = rows.length.toLocaleString('id-ID');
@@ -90,4 +125,5 @@ function renderDashboard(){
         </div></div>`;
     }).join('');
   renderPerSalesPanel();
+  renderRealProgressPanel();
 }
