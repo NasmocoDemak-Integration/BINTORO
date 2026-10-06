@@ -162,6 +162,9 @@ function renderProgressContent(){
   const logs = LOG_CACHE.filter(l=>l.targetId===target.id).sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
 
   container.innerHTML = `
+    ${assign.needs_validation ? `<div class="panel" style="margin-bottom:16px;border:1px solid var(--amber);background:#FFF8EC;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:#92600A;">⚠️ Nomor HP target ini ditandai tidak valid — sedang menunggu validasi ulang oleh Customer Validator.</div>
+    </div>` : ''}
     <div class="pu-grid">
       <div>
         <div class="panel" style="margin-bottom:16px;">
@@ -207,6 +210,7 @@ function renderProgressContent(){
               <option value="Retensi-Service">Retensi-Service</option>
               <option value="Retensi & Referensi">Retensi &amp; Referensi</option>
               <option value="Suspect">Suspect</option>
+              <option value="No Tidak Valid">No Tidak Valid</option>
             </select>
           </div>
 
@@ -261,13 +265,15 @@ function renderProgressContent(){
     const newHp2 = document.getElementById('editHp2').value.trim();
     const newHp3 = document.getElementById('editHp3').value.trim();
 
+    let flagInvalid = false;
     if(status==='Sudah Dihubungi'){
       const detail = document.getElementById('detailSudahDihubungi').value;
       if(detail) notes = notes ? `[${detail}] ${notes}` : `[${detail}]`;
+      if(detail==='No Tidak Valid') flagInvalid = true;
     }
 
     await setAssignment(target.id, 'status', status);
-    await submitLog(target.id, sales, status, notes, file);
+    await submitLog(target.id, sales, status, notes, file, flagInvalid);
 
     if(newHp1!==(target.hp1||'') || newHp2!==(target.hp2||'') || newHp3!==(target.hp3||'')){
       await updatePhoneNumbers(target.id, newHp1, newHp2, newHp3);
