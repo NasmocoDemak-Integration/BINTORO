@@ -63,18 +63,30 @@ function enterApp(){
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('app').classList.add('ready');
   const isManager = CURRENT_USER.role === 'manager';
+  const isValidator = CURRENT_USER.role === 'validator';
   document.getElementById('sbAvatar').textContent = initials(CURRENT_USER.name);
   document.getElementById('tbAvatar').textContent = initials(CURRENT_USER.name);
   document.getElementById('sbName').textContent = CURRENT_USER.name;
-  document.getElementById('sbRole').textContent = isManager ? 'Full Access' : 'Sales — Data Sendiri';
-  document.getElementById('dashSub').textContent = isManager ? 'Ringkasan seluruh target, umur unit, dan revenue.' : 'Ringkasan target yang di-assign ke Anda.';
-  document.getElementById('dbSub').textContent = isManager ? 'Kelola & pantau seluruh target replacement.' : 'Target yang di-assign ke Anda.';
-  document.getElementById('puSub').textContent = isManager ? 'Pilih target untuk melihat & mencatat riwayat follow-up.' : 'Target Anda — catat progress follow-up di sini.';
-  document.getElementById('revSub').textContent = isManager ? 'Potensi & realized revenue dari seluruh target.' : 'Potensi & realized revenue dari target Anda.';
-  document.querySelectorAll('.nav-item[data-view="users"]').forEach(el=> el.style.display = isManager ? '' : 'none');
-  document.querySelectorAll('.nav-item[data-view="export"]').forEach(el=> el.style.display = isManager ? '' : 'none');
+  document.getElementById('sbRole').textContent = isManager ? 'Full Access' : isValidator ? 'Customer Validator' : 'Sales — Data Sendiri';
+
+  // Role Customer Validator cuma boleh akses menu Validasi Nomor
+  document.querySelectorAll('.nav-item').forEach(el=>{
+    if(isValidator) el.style.display = (el.dataset.view==='validasi') ? '' : 'none';
+  });
+  if(!isValidator){
+    document.getElementById('dashSub').textContent = isManager ? 'Ringkasan seluruh target, umur unit, dan revenue.' : 'Ringkasan target yang di-assign ke Anda.';
+    document.getElementById('dbSub').textContent = isManager ? 'Kelola & pantau seluruh target replacement.' : 'Target yang di-assign ke Anda.';
+    document.getElementById('puSub').textContent = isManager ? 'Pilih target untuk melihat & mencatat riwayat follow-up.' : 'Target Anda — catat progress follow-up di sini.';
+    document.getElementById('revSub').textContent = isManager ? 'Potensi & realized revenue dari seluruh target.' : 'Potensi & realized revenue dari target Anda.';
+    document.querySelectorAll('.nav-item[data-view="users"]').forEach(el=> el.style.display = isManager ? '' : 'none');
+    document.querySelectorAll('.nav-item[data-view="export"]').forEach(el=> el.style.display = isManager ? '' : 'none');
+    document.querySelectorAll('.nav-item[data-view="validasi"]').forEach(el=> el.style.display = isManager ? '' : 'none');
+  }
+
   if(isManager){ puView='grid'; selectedSalesForProgress=null; }
-  else{ puView='list'; selectedSalesForProgress=CURRENT_USER.name; }
+  else if(!isValidator){ puView='list'; selectedSalesForProgress=CURRENT_USER.name; }
+
   populateFilterOptions();
-  renderAll();
+  if(isValidator){ switchView('validasi'); }
+  else{ renderAll(); }
 }
