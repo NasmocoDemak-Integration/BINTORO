@@ -52,6 +52,31 @@ function renderSalesGrid(){
   });
 }
 
+function renderStatusAgeBreakdown(rows){
+  const AGE_COLS = ['keep','cold','warm','hot'];
+  const matrix = {};
+  STATUS_OPTIONS.forEach(s=>{ matrix[s] = {keep:0, cold:0, warm:0, hot:0}; });
+
+  rows.forEach(r=>{
+    const status = getAssignment(r.id).status;
+    const ageCls = statusFromAge(r._age!=null ? r._age : ageYears(r.date)).cls;
+    if(matrix[status] && matrix[status][ageCls]!==undefined) matrix[status][ageCls]++;
+  });
+
+  const tbody = document.getElementById('puBreakdownBody');
+  if(!tbody) return;
+  tbody.innerHTML = STATUS_OPTIONS.map(s=>{
+    const row = matrix[s];
+    const total = AGE_COLS.reduce((sum,c)=>sum+row[c], 0);
+    const meta = STATUS_META[s];
+    return `<tr>
+      <td><span class="status-pill ${meta.cls}">${s}</span></td>
+      <td>${row.keep}</td><td>${row.cold}</td><td>${row.warm}</td><td>${row.hot}</td>
+      <td style="font-weight:700;">${total}</td>
+    </tr>`;
+  }).join('');
+}
+
 function renderTargetListForSales(){
   document.getElementById('puTitle').textContent = selectedSalesForProgress || 'Target Saya';
   document.getElementById('puSub').textContent = 'Klik salah satu target untuk lihat & catat progress.';
@@ -79,6 +104,8 @@ function renderTargetListForSales(){
       renderTargetListForSales();
     });
   });
+
+  renderStatusAgeBreakdown(allRows);
 
   const search = (document.getElementById('puListSearch').value||'').toLowerCase();
 
