@@ -11,7 +11,7 @@ async function loadFromSheets(){
     return true;
   }catch(err){ console.error("Gagal ambil data:", err); return false; }
 }
-function getAssignment(id){ return ASSIGN_CACHE[id] || {sales:"", status:"Belum Dihubungi"}; }
+function getAssignment(id){ return ASSIGN_CACHE[id] || {sales:"", status:"Belum Dihubungi", needs_validation:false}; }
 async function setAssignment(id, field, value){
   const current = getAssignment(id);
   current[field] = value;
@@ -28,18 +28,37 @@ function fileToBase64(file){
     reader.readAsDataURL(file);
   });
 }
-async function submitLog(targetId, sales, status, notes, file){
+async function submitLog(targetId, sales, status, notes, file, flagInvalid){
   let fileData=null, fileName=null, mimeType=null;
   if(file){ fileData = await fileToBase64(file); fileName = file.name; mimeType = file.type; }
   const entry = { id:"local_"+Date.now(), targetId:String(targetId), timestamp:new Date().toISOString(), sales, status, notes, docUrl: file ? "(mengunggah...)" : "" };
   LOG_CACHE.push(entry);
   if(SHEET_URL){
     try{
-      const res = await fetch(SHEET_URL, { method:"POST", body: JSON.stringify({ action:"log", targetId, sales, status, notes, fileData, fileName, mimeType }) });
+      const res = await fetch(SHEET_URL, { method:"POST", body: JSON.stringify({ action:"log", targetId, sales, status, notes, fileData, fileName, mimeType, flagInvalid: !!flagInvalid }) });
       const json = await res.json();
       entry.docUrl = json.docUrl || "";
     }catch(err){ console.error("Gagal simpan log:", err); }
   }
+  if(flagInvalid){
+    const current = getAssignment(targetId);
+    current.needs_validation = true;
+    ASSIGN_CACHE[targetId] = current;
+  }
+}
+
+/* ================= Customer Validator ================= */
+async function resolveValidation(targetId, hp1, hp2, hp3, newSales){
+  const row = RAW.find(r=>r.id===targetId);
+  if(row){ row.hp1 = hp1||null; row.hp2 = hp2||null; row.hp3 = hp3||null; }
+  const current = getAssignment(targetId);
+  current.sales = newSales || "";
+  current.needs_validation = false;
+  ASSIGN_CACHE[targetId] = current;
+  if(!SHEET_URL) return;
+  try{
+    await fetch(SHEET_URL, { method:"POST", body: JSON.stringify({ action:"resolveValidation", targetId, hp1, hp2, hp3, newSales: newSales||"", validatorName: CURRENT_USER.name }) });
+  }catch(err){ console.error("Gagal simpan validasi:", err); }
 }
 
 async function updatePhoneNumbers(targetId, hp1, hp2, hp3){
@@ -66,4 +85,3 @@ function populateFilterOptions(){
     salesSel.style.display='none';
   }
 }
-
