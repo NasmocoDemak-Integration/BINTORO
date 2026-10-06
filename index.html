@@ -103,6 +103,10 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
       Export Data
     </div>
+    <div class="nav-item" data-view="validasi" style="display:none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+      Validasi Nomor
+    </div>
 
     <div class="sidebar-bottom">
       <div class="sidebar-user">
@@ -366,7 +370,7 @@
             <div><label>Username</label><input type="text" id="umUsername"></div>
             <div><label>Password <span style="font-weight:400;text-transform:none;" id="umPassHint"></span></label><input type="text" id="umPassword"></div>
             <div><label>No. HP</label><input type="text" id="umNoHp"></div>
-            <div><label>Role</label><select id="umRole"><option value="sales">Sales</option><option value="manager">Manager</option></select></div>
+            <div><label>Role</label><select id="umRole"><option value="sales">Sales</option><option value="manager">Manager</option><option value="validator">Customer Validator</option></select></div>
           </div>
           <div class="um-actions">
             <button class="btn-secondary" id="umCancelBtn">Batal</button>
@@ -460,6 +464,34 @@
         </div>
       </div>
 
+      <div class="view" id="view-validasi">
+        <div class="page-title">Validasi Nomor</div>
+        <div class="page-sub">Perbarui nomor HP yang tidak valid, lalu assign ulang ke sales (atau lepas jadi belum di-assign).</div>
+
+        <div class="kpi-row" style="grid-template-columns:repeat(3,1fr);">
+          <div class="kpi-card">
+            <div class="kpi-top"><div class="kpi-label">Menunggu Validasi</div></div>
+            <div class="kpi-value" id="valKpiPending">–</div>
+            <div class="kpi-note">Target dengan nomor ditandai tidak valid</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-top"><div class="kpi-label">Divalidasi Hari Ini</div></div>
+            <div class="kpi-value" id="valKpiToday">–</div>
+            <div class="kpi-note">Selesai diproses hari ini</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-top"><div class="kpi-label">Total Sudah Divalidasi</div></div>
+            <div class="kpi-value" id="valKpiTotal">–</div>
+            <div class="kpi-note">Sepanjang waktu</div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:16px;">
+          <input type="text" class="search-input-inline" id="validasiSearch" placeholder="Cari nama atau VIN..." style="margin-bottom:14px;">
+          <div id="validasiList"></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -475,6 +507,7 @@
 <script src="js/revenue.js"></script>
 <script src="js/users.js"></script>
 <script src="js/export.js"></script>
+<script src="js/validation.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
