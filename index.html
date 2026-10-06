@@ -197,6 +197,33 @@
           <div class="bars" id="statusBars"></div>
         </div>
 
+        <div class="panel" id="realProgressPanel" style="margin-top:16px;">
+          <h3>Progress Real — Target Prospek ke Atas</h3>
+          <div class="kpi-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px;">
+            <div class="kpi-card">
+              <div class="kpi-top"><div class="kpi-label">Jumlah Target</div></div>
+              <div class="kpi-value" id="rpCount">–</div>
+              <div class="kpi-note">Status Prospek / Hot Prospek / Deal</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-top"><div class="kpi-label">Revenue Potensi</div></div>
+              <div class="kpi-value" id="rpRevPotensi" style="font-size:18px;">–</div>
+              <div class="kpi-note">Dari target progress ini saja</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-top"><div class="kpi-label">Revenue Realized</div></div>
+              <div class="kpi-value" id="rpRevRealized" style="font-size:18px;">–</div>
+              <div class="kpi-note">Status = Deal</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-top"><div class="kpi-label">Conversion Rate</div></div>
+              <div class="kpi-value" id="rpConv" style="font-size:18px;">–</div>
+              <div class="kpi-note">Deal / total progress</div>
+            </div>
+          </div>
+          <div class="bars" id="rpBars"></div>
+        </div>
+
         <div class="panel" id="perSalesPanel" style="margin-top:16px;">
           <h3>Ringkasan per Sales</h3>
           <table class="rev-table">
