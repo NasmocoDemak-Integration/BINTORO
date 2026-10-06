@@ -8,6 +8,7 @@ function switchView(name){
   if(name==='revenue') renderRevenueView();
   if(name==='users') renderUsersView();
   if(name==='export') renderExportView();
+  if(name==='validasi') renderValidationView();
   if(name==='dashboard') renderDashboard();
   closeMobileNav();
 }
